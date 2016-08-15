@@ -1,5 +1,5 @@
 BIN_SIMULADOR = simulador
-SRCS_SIMULADOR = $(wildcard src/ep1sh/*.c) $(wildcard src/*.c)
+SRCS_SIMULADOR = $(wildcard src/*.c) $(wildcard src/*.c)
 
 INCS = -Isrc/
 LIBS = -lpthread
@@ -25,7 +25,7 @@ all: $(BIN_SIMULADOR)
 $(BIN_SIMULADOR): $(OBJS_SIMULADOR)
 	$(CC) $(LDFLAGS) $(INFLAG)$^ $(OUTFLAG)$@
 
-clean: clean_ep1sh
+clean: clean_ep1simulador
 
 clean_ep1simulador:
 	$(RM) $(BIN_SIMULADOR) $(OBJS_SIMULADOR) $(DEPS)
