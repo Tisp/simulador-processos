@@ -1,36 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "tracefile.h"
 
 
+/* Formato padrao do arquivo de entrada */
 const char *format = "%d %s %d %d";
 
 Tracefile *read_tracefile(char *filename) {
 
 	FILE *fp;
 	fp = fopen(filename, "r+");
-	Tracefile *tracefile;
-	
-//	int length = countlines(fp);
-	int length = 0;
 
-	int i = 0;
-	printf("%d", length);
-	fseek(fp, 0, SEEK_SET);
+	if(!fp) {
+		printf("Erro ao abrir o arquivo %s", filename);
+		exit(-1);
+	}
+
+	Tracefile *tracefile;
+	int length = countlines(fp);
+	int i = 0, t0, dt, deadline;
+	char nome[BUFFER];
 
 	tracefile = (Tracefile *) malloc(sizeof(Tracefile));
 	tracefile->length = length;
 	tracefile->trace  = (Trace **) malloc(sizeof(Trace **) * length);
 
+	for(i = 0; i < length; i++) 
+		tracefile->trace[i] = (Trace *) malloc(sizeof(Trace));
+		 
 	
-	while(fscanf(fp, format, &tracefile->trace[i]->t0, &tracefile->trace[i]->nome, &tracefile->trace[i]->dt, &tracefile->trace[i]->deadline) == 4) {
-		printf("%d", tracefile->trace[i]->t0);
+	i = 0;
+	
+	while(fscanf(fp, format, &t0, &nome, &dt, &deadline) == 4) {
+
+		tracefile->trace[i]->t0 = t0;
+		tracefile->trace[i]->nome = strdup(nome);
+		tracefile->trace[i]->dt = dt;
+		tracefile->trace[i]->deadline = deadline;
+
 		i++;
 	}
 
 	fclose(fp);
-
 	return tracefile;
 }
 
@@ -43,6 +56,25 @@ int countlines(FILE *stream) {
 	while(fscanf(stream, format, &t0, &nome, &dt, &deadline) == 4) {
 		lines++;
 	}
+
+	/* Retorna o ponteiro para comeco do arquivo */
+	fseek(stream, 0, SEEK_SET);
+
 	/* Retorna o ponteiro para o comeco do arquivo */
 	return lines;	
+}
+
+
+/* Libera memoria */
+void tracefile_destroy(Tracefile *tracefile) {
+
+	int i;
+
+	for(i = 0; i < tracefile->length; i++) {
+		free(tracefile->trace[i]->nome);
+		free(tracefile->trace[i]);
+	}
+
+	free(tracefile->trace);
+	free(tracefile);
 }

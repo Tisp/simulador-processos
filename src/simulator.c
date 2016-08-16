@@ -3,11 +3,19 @@
 
 #include "tracefile.h"
 
-int main() {
+int main(int argc, char **argv) {
 
-	read_tracefile("/home/bcc/tisp/simulador-processos/teste");
-//	printf("%d", tracefile->length);
+	Tracefile *tracefile = read_tracefile(argv[1]);
+	int i ;
+
+	for(i = 0; i < tracefile->length; i++) {
+		printf("%d ", tracefile->trace[i]->t0);
+		printf("%s ", tracefile->trace[i]->nome);
+		printf("%d ", tracefile->trace[i]->dt);
+		printf("%d\n", tracefile->trace[i]->deadline);
+	}
 	
+	tracefile_destroy(tracefile);
 	return 0;
 
 }

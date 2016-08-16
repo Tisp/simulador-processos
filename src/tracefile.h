@@ -1,8 +1,8 @@
 #ifndef _TRACEFILE_H
 #define _TRACEFILE_H
 
-/* Tamanho do buffer de leitura da linha */
-#define LINE_BUFFER 1024;
+/* Tamanho do buffer */
+#define BUFFER 256
 
 /* Estrutura que armazena linhas do tracefile */
 typedef struct {
@@ -22,5 +22,6 @@ typedef struct {
 
 int countlines(FILE *stream);
 Tracefile *read_tracefile(char *filename);
+void tracefile_destroy(Tracefile *tracefile);
 
 #endif
