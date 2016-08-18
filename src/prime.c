@@ -1,6 +1,9 @@
 #include <stdio.h>
-#include <math.h>
 
+/* Verifica se o numero e primo 
+    ultilizando uma abordagem 
+    simples
+*/
 int is_prime(unsigned int num) {
     
     if(num <= 1) return 0;

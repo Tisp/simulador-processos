@@ -6,21 +6,22 @@
 
 
 /* Formato padrao do arquivo de entrada */
-const char *format = "%d %s %d %d";
+const char *format = "%f %s %f %f";
 
-Tracefile *read_tracefile(char *filename) {
+Tracefile *read_tracefile(const char *filename) {
 
 	FILE *fp;
 	fp = fopen(filename, "r+");
 
 	if(!fp) {
-		printf("Erro ao abrir o arquivo %s", filename);
+		printf("Erro ao abrir o arquivo");
 		exit(-1);
 	}
 
 	Tracefile *tracefile;
 	int length = countlines(fp);
-	int i = 0, t0, dt, deadline;
+	int i = 0;
+	float t0, dt, deadline;
 	char nome[BUFFER];
 
 	tracefile = (Tracefile *) malloc(sizeof(Tracefile));
@@ -35,10 +36,10 @@ Tracefile *read_tracefile(char *filename) {
 	
 	while(fscanf(fp, format, &t0, &nome, &dt, &deadline) == 4) {
 
-		tracefile->trace[i]->t0 = t0;
+		tracefile->trace[i]->t0 = t0 / 1000;
 		tracefile->trace[i]->nome = strdup(nome);
-		tracefile->trace[i]->dt = dt;
-		tracefile->trace[i]->deadline = deadline;
+		tracefile->trace[i]->dt = dt / 1000;
+		tracefile->trace[i]->deadline = deadline / 1000;
 
 		i++;
 	}

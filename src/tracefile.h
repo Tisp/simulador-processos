@@ -6,10 +6,10 @@
 
 /* Estrutura que armazena linhas do tracefile */
 typedef struct {
-	int t0;
+	float t0;
 	char *nome;
-	int dt;
-	int deadline;
+	float dt;
+	float deadline;
 } Trace;
 
 /* Estrutura que armazena do tracefile */
@@ -21,7 +21,7 @@ typedef struct {
 } Tracefile;
 
 int countlines(FILE *stream);
-Tracefile *read_tracefile(char *filename);
+Tracefile *read_tracefile(const char *filename);
 void tracefile_destroy(Tracefile *tracefile);
 
 #endif
