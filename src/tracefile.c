@@ -36,10 +36,10 @@ Tracefile *read_tracefile(const char *filename) {
 	
 	while(fscanf(fp, format, &t0, &nome, &dt, &deadline) == 4) {
 
-		tracefile->trace[i]->t0 = t0 / 1000;
+		tracefile->trace[i]->t0 = t0;
 		tracefile->trace[i]->nome = strdup(nome);
-		tracefile->trace[i]->dt = dt / 1000;
-		tracefile->trace[i]->deadline = deadline / 1000;
+		tracefile->trace[i]->dt = dt;
+		tracefile->trace[i]->deadline = deadline;
 
 		i++;
 	}

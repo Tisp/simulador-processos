@@ -6,12 +6,12 @@
 #include "util.h"
 
 /* Retorna o numero de CPUS */
-int n_cpus() {
+int n_cores() {
     return sysconf(_SC_NPROCESSORS_ONLN);
 }
 
 float diff_time_ms(clock_t t2, clock_t t1) {
-    return ((float)(t2 - t1) / CLOCKS_PER_SEC) / 1000; 
+    return ((float)(t2 - t1) / CLOCKS_PER_SEC); 
 }
 
 

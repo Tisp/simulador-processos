@@ -6,10 +6,10 @@
 
 /* Estrutura que armazena linhas do tracefile */
 typedef struct {
-	float t0;
-	char *nome;
-	float dt;
-	float deadline;
+	float t0; /* Instante de tempo que o processo chega ao sistema */
+	char *nome; /* Nome do processo */
+	float dt; /* Tempo real de processamento */
+	float deadline; /* Tempo limite do processo */
 } Trace;
 
 /* Estrutura que armazena do tracefile */

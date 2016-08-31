@@ -18,12 +18,22 @@ int main(int argc, char **argv) {
 	/* Nome do arquivo de trace */
 	const char *file = argv[1];
 
-	/*Le o arquivo e cria uma estrutura de tracefile */
+	/* Le o arquivo e cria uma estrutura de tracefile */
 	Tracefile *tracefile = read_tracefile(file);
 
+	/* Guarda os valores do relogio */
 	clock_t t1, t2;
 
 	int i  = 0;
+
+	/* Numero de cores no computador */
+	int ncores = n_cores();
+
+	/* Uma thread para cada core */
+	pthread_t thread[ncores];
+
+	/* Um lock para cada thread */
+	pthread_mutex_t locks[ncores];	
 
 	/* Captura primeiro time */
 	t1 = clock();
