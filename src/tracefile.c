@@ -40,6 +40,9 @@ Tracefile *read_tracefile(const char *filename) {
 		tracefile->trace[i]->nome = strdup(nome);
 		tracefile->trace[i]->dt = dt;
 		tracefile->trace[i]->deadline = deadline;
+		tracefile->trace[i]->finished = 0;
+		tracefile->trace[i]->to_run = 0;
+		tracefile->trace[i]->thread = NULL;
 
 		i++;
 	}

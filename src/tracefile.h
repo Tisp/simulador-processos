@@ -4,8 +4,13 @@
 /* Tamanho do buffer */
 #define BUFFER 256
 
+#include <pthread.h>
+
 /* Estrutura que armazena linhas do tracefile */
 typedef struct {
+	int finished; /* Verifica se o processo ja terminou */
+	int to_run; /* Verifica se a thread precisa ser executada */
+	pthread_t thread; /* Thread */
 	float t0; /* Instante de tempo que o processo chega ao sistema */
 	char *nome; /* Nome do processo */
 	float dt; /* Tempo real de processamento */
