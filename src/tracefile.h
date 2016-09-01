@@ -10,6 +10,7 @@
 typedef struct {
 	int finished; /* Verifica se o processo ja terminou */
 	int to_run; /* Verifica se a thread precisa ser executada */
+	float runtime; /* tempo rodado da thread */
 	pthread_t thread; /* Thread */
 	float t0; /* Instante de tempo que o processo chega ao sistema */
 	char *nome; /* Nome do processo */
