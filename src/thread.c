@@ -14,16 +14,16 @@ pthread_mutex_t lock;
 void *worker(void *args) {
 
     Trace *trace = args;
+    int max_cores = n_cores();
     float diff = diff_time_ms(clock(), trace->t0);
 
     /* Espera para ser marcada para rodar */
-    while(trace->to_run == 0) {
-     //   printf("[%s] esperando para comecar ....\n", trace->nome);
-        usleep(1000);
+    while(trace->to_run == 0 || occupied_cores > max_cores) {
+        usleep(1000*10);
     }
     
     /* Comeca o processamento */
-    printf("Comecando processamento da thread %s", trace->nome);
+    printf("Comecando processamento da thread %s\n", trace->nome);
 
     pthread_mutex_lock(&lock);
     occupied_cores++;
@@ -31,15 +31,17 @@ void *worker(void *args) {
 
     clock_t t = clock();
 
+    printf("Cores Ocuppied [%d]\n", occupied_cores);
     while(trace->runtime < trace->dt) {
+     //   printf("%s ja rodei por %lf - %lf\n", trace->nome, trace->runtime, trace->dt);
         is_prime(1000); /* Gasta processamento */
         diff = diff_time_ms(clock(), t);
-        printf("Deu erro aqui?");
         trace->runtime += diff;
     }
 
     /* terminou o process */
     pthread_mutex_lock(&lock);
+    printf("Liberando um processador\n");
     occupied_cores--;
     pthread_mutex_unlock(&lock); 
     
@@ -54,7 +56,7 @@ int finished(Tracefile *tracefile) {
     int i;
 
     for(i = 0; i < tracefile->length; i++) {
-        if(tracefile->trace[i]->finishe == 0)
+        if(tracefile->trace[i]->finished == 0)
             return 0;
     }
 
