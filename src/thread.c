@@ -12,33 +12,52 @@ pthread_mutex_t lock;
 
 
 void *worker(void *args) {
+    pthread_mutex_lock(&lock);
 
     Trace *trace = args;
     int max_cores = n_cores();
-    float diff = diff_time_ms(clock(), trace->t0);
+    float diff;
+    int my_core = 0;
 
     /* Espera para ser marcada para rodar */
-    while(trace->to_run == 0) {
-        usleep(10000);
+    while(occupied_cores > max_cores) {
+            usleep(10000);
     }
     
-    pthread_mutex_lock(&lock);
+
+    /* Inicio do processamento */
     occupied_cores++;
+    my_core = occupied_cores;
+  //  pthread_mutex_unlock(&lock); 
+
+
+    if(debug) {
+        fprintf(stderr, "Processo %s usando CPU %d\n", trace->nome, my_core);
+    }
 
     clock_t t = clock();
 
-
     while(trace->runtime < trace->dt) {
-        is_prime(10000); /* Gasta processamento */
-        diff = diff_time_ms(clock(), t);
-        trace->runtime += diff;
+
+        //printf("Processo %s [%lf, %lf] falta: %lf\n", trace->nome, trace->dt, trace->runtime,(trace->dt - trace->runtime));
+       // printf("Calculando primo\n");
+        is_prime(11587); /* Gasta processamento */
+        diff = diff_time_s(clock(), t);
+        trace->runtime = diff;
     }
 
-    occupied_cores--;
-    
-    trace->finished = 1;
-    pthread_mutex_unlock(&lock); 
+    if(debug) {
+        fprintf(stderr, "Processo %s finalizado, liberando CPU %d\n", trace->nome, my_core);
+    }
 
+  // pthread_mutex_lock(&lock);
+   occupied_cores--;
+  
+   
+    trace->finished = 1;
+    pthread_exit(trace->thread);
+    
+    pthread_mutex_unlock(&lock);
     return NULL;
 }
 
