@@ -7,18 +7,16 @@
 #include "prime.h"
 #include "util.h"
 #include "thread.h"
-
+#include "output.h"
 
 int debug;
-
 
 /* First-Come First-Served */
 
 void fcfs(Tracefile *tracefile) {
 
     int i = 0;
-    int num_cores = n_cores();
-           
+
     /* Comeca a simulacao de fcfs */
     clock_t t1 = clock();
     
@@ -27,7 +25,7 @@ void fcfs(Tracefile *tracefile) {
         float diff = diff_time_s(clock(), t1);
         i = i % tracefile->length;
 
-        if(diff >= tracefile->trace[i]->t0 && tracefile->trace[i]->to_run == 0 && occupied_cores < num_cores) {
+        if(diff >= tracefile->trace[i]->t0 && tracefile->trace[i]->to_run == 0 && find_free_core() >= 0) {
             tracefile->trace[i]->to_run = 1;
             tracefile->trace[i]->init_time = t1;
             pthread_create(&tracefile->trace[i]->thread, NULL, worker, tracefile->trace[i]);   
@@ -39,5 +37,8 @@ void fcfs(Tracefile *tracefile) {
         /* Todos os processos foram terminados */
         if(finished(tracefile) == 1) break;
     }
+
+    write_contexts(0);
+
 }
 

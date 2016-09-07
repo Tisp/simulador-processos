@@ -9,8 +9,10 @@
 #include "prime.h"
 #include "util.h"
 #include "fcfs.h"
+#include "srtn.h"
 
 int debug;
+int *occupied_cores;
 
 int main(int argc, char **argv) {
 
@@ -49,10 +51,11 @@ int main(int argc, char **argv) {
 	/* Inicia o arquivo de output */
 	new_output_file(output_file);
 
+	occupied_cores = calloc(n_cores(), sizeof(int));
 
 	switch(scheduling) {
 		case 1: fcfs(tracefile); break;
-		case 2: printf("Ainda em faze de implementacao"); break;
+		case 2: srtn(tracefile); break;
 		case 3: printf("Ainda em faze de implementacao"); break; 
 	}
 	

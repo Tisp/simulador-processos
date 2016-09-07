@@ -8,38 +8,58 @@
 #include "output.h"
 
 int debug = 0;
-int occupied_cores = 0;
 pthread_mutex_t lock;
+int *occupied_cores;
 
+
+int find_free_core() {
+    
+    int i;
+    int max_cores = n_cores();
+
+    for(i = 0; i < max_cores; i++) {
+        if(occupied_cores[i] == 0)
+            return i;
+    }
+
+    return -1;
+}
 
 void *worker(void *args) {
+
     pthread_mutex_lock(&lock);
 
     Trace *trace = args;
     int max_cores = n_cores();
     float diff;
     int my_core = 0;
+    clock_t t = clock();
+
 
     /* Espera para ser marcada para rodar */
-    while(occupied_cores > max_cores) {
+    LOOP:while(trace->to_run == 0) {
             usleep(10000);
     }
-    
 
     /* Inicio do processamento */
-    occupied_cores++;
-    my_core = occupied_cores;
-  //  pthread_mutex_unlock(&lock); 
+     my_core = find_free_core();
 
+     /* Espera liberar cpu */
+     if(my_core == -1) goto LOOP;
+
+     occupied_cores[my_core] = 1;
 
     if(debug) 
         fprintf(stderr, "Processo %s usando CPU %d\n", trace->nome, my_core);
     
-
-    clock_t t = clock();
-
     while(trace->runtime <= trace->dt) {
-        //printf("Processo %s [%lf, %lf] falta: %lf\n", trace->nome, trace->dt, trace->runtime,(trace->dt - trace->runtime));
+
+        if(trace->to_run == 0) {
+            occupied_cores[my_core] = 0;
+            goto LOOP;
+        }
+
+       //printf("Processo %s [%lf, %lf] falta: %lf\n", trace->nome, trace->dt, trace->runtime,(trace->dt - trace->runtime));
         is_prime(11587); /* Gasta processamento */
         diff = diff_time_s(clock(), t);
         trace->runtime = diff;
@@ -50,7 +70,8 @@ void *worker(void *args) {
     
 
   // pthread_mutex_lock(&lock);
-   occupied_cores--;
+   occupied_cores[my_core] = 0;
+
    diff = diff_time_s(clock(), trace->init_time);
    write_output(trace->nome, diff, (diff - trace->t0));
    

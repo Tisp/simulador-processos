@@ -1,6 +1,9 @@
 #ifndef _UTIL_H
 #define _UTIL_H
 
+extern int *occupied_cores;
+
+
 /* Retonar o numero de CPUS */
 int n_cores();
 
