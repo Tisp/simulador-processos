@@ -25,7 +25,7 @@ int shortest(Tracefile *tracefile, int id, float runtime) {
         /* Verifica se esta rodando  e se ainda nao terminou */
         if(tracefile->trace[i]->to_run == 1 && tracefile->trace[i]->finished == 0) {
             if((tracefile->trace[i]->dt - tracefile->trace[i]->runtime) > runtime) {
-                candidate = i; //Possivel candidato a ser substituido
+                candidate = i; /* Possivel candidato a ser substituido */
             }
         }
     }
@@ -38,7 +38,6 @@ int shortest(Tracefile *tracefile, int id, float runtime) {
 void srtn(Tracefile *tracefile) {
 
     int i = 0;
-    int num_cores = n_cores();
     int preemption = 0;
            
     /* Comeca a simulacao de fcfs */
