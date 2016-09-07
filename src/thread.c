@@ -5,6 +5,7 @@
 #include "tracefile.h"
 #include "prime.h"
 #include "util.h"
+#include "output.h"
 
 int debug = 0;
 int occupied_cores = 0;
@@ -31,34 +32,33 @@ void *worker(void *args) {
   //  pthread_mutex_unlock(&lock); 
 
 
-    if(debug) {
+    if(debug) 
         fprintf(stderr, "Processo %s usando CPU %d\n", trace->nome, my_core);
-    }
+    
 
     clock_t t = clock();
 
-    while(trace->runtime < trace->dt) {
-
+    while(trace->runtime <= trace->dt) {
         //printf("Processo %s [%lf, %lf] falta: %lf\n", trace->nome, trace->dt, trace->runtime,(trace->dt - trace->runtime));
-       // printf("Calculando primo\n");
         is_prime(11587); /* Gasta processamento */
         diff = diff_time_s(clock(), t);
         trace->runtime = diff;
     }
 
-    if(debug) {
+    if(debug)
         fprintf(stderr, "Processo %s finalizado, liberando CPU %d\n", trace->nome, my_core);
-    }
+    
 
   // pthread_mutex_lock(&lock);
    occupied_cores--;
-  
+   diff = diff_time_s(clock(), trace->init_time);
+   write_output(trace->nome, diff, (diff - trace->t0));
    
-    trace->finished = 1;
-    pthread_exit(trace->thread);
-    
-    pthread_mutex_unlock(&lock);
-    return NULL;
+   trace->finished = 1;
+   pthread_exit(trace->thread);
+   
+   pthread_mutex_unlock(&lock);
+   return NULL;
 }
 
 

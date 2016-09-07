@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "tracefile.h"
+#include "output.h"
 #include "prime.h"
 #include "util.h"
 #include "fcfs.h"
@@ -36,7 +37,7 @@ int main(int argc, char **argv) {
 		exit(-1);
 	}
 	
-	/* Habilitando modo degug */
+	/* Habilitando modo debug */
 	if(argc > 4 && strcmp("d", argv[4]) == 0) {
 		debug = 1;
 	}
@@ -44,6 +45,9 @@ int main(int argc, char **argv) {
 
 	/* Le o arquivo e cria uma estrutura de tracefile */
 	Tracefile *tracefile = read_tracefile(input_file);
+
+	/* Inicia o arquivo de output */
+	new_output_file(output_file);
 
 
 	switch(scheduling) {

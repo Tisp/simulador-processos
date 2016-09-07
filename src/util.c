@@ -11,8 +11,10 @@ int n_cores() {
     //return 1;
 }
 
+/* Retonar em segundos a diferenca de dois times */
 float diff_time_s (clock_t t2, clock_t t1) {
     return ((float)(t2 - t1) / CLOCKS_PER_SEC); 
 }
+
 
 
