@@ -30,7 +30,6 @@ void *worker(void *args) {
     pthread_mutex_lock(&lock);
 
     Trace *trace = args;
-    int max_cores = n_cores();
     float diff;
     int my_core = 0;
     clock_t t = clock();
@@ -76,7 +75,7 @@ void *worker(void *args) {
    write_output(trace->nome, diff, (diff - trace->t0));
    
    trace->finished = 1;
-   pthread_exit(trace->thread);
+   pthread_exit(&trace->thread);
    
    pthread_mutex_unlock(&lock);
    return NULL;
