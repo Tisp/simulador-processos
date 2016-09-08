@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "tracefile.h"
+#include "util.h"
 
 
 /* Formato padrao do arquivo de entrada */

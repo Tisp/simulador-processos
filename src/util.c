@@ -11,8 +11,14 @@ int n_cores() {
 }
 
 /* Retonar em segundos a diferenca de dois times */
-float diff_time_s (clock_t t2, clock_t t1) {
-    return ((float)(t2 - t1) / CLOCKS_PER_SEC); 
+float diff_time_s (Timer finish, Timer start) {
+    float elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    return elapsed; 
+}
+
+void get_time(Timer *t) {
+    clock_gettime(CLOCK_MONOTONIC, t);
 }
 
 

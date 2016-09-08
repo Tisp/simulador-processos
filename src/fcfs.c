@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <time.h>
+#include <unistd.h>
 
 
 #include "tracefile.h"
@@ -16,19 +17,24 @@ int debug;
 void fcfs(Tracefile *tracefile) {
 
     int i = 0;
+    float diff;
 
     /* Comeca a simulacao de fcfs */
-    clock_t t1 = clock();
+    Timer start, finish;
+    get_time(&start);
     
     while(1) {
         
-        float diff = diff_time_s(clock(), t1);
+        get_time(&finish);
+        diff = diff_time_s(finish, start);
+	    
         i = i % tracefile->length;
-
+	    //printf("%lf, %lf %d \n", diff, tracefile->trace[i]->t0, (diff >= tracefile->trace[i]->t0));
+        
         if(diff >= tracefile->trace[i]->t0 && tracefile->trace[i]->to_run == 0 && find_free_core() >= 0) {
             tracefile->trace[i]->to_run = 1;
-            tracefile->trace[i]->init_time = t1;
-            pthread_create(&tracefile->trace[i]->thread, NULL, worker, tracefile->trace[i]);   
+            tracefile->trace[i]->init_time = start;
+            pthread_create(&tracefile->trace[i]->thread, NULL, worker, (void *)tracefile->trace[i]);   
             i++;
         }
 

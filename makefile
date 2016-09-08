@@ -2,7 +2,7 @@ BIN_SIMULADOR = simulador
 SRCS_SIMULADOR = $(wildcard src/*.c) $(wildcard src/*.c)
 
 INCS = -Isrc/
-LIBS = -lpthread
+LIBS = -lrt -lpthread -pthread
 
 CFLAGS = $(INCS) -c -g -Wall -pedantic
 LDFLAGS = $(LIBS)
@@ -23,7 +23,7 @@ DEPS = $(SRCS_EP1:$(SRCEXT)=$(DEPEXT)) $(SRCS_SIMULADOR:$(SRCEXT)=$(DEPEXT))
 all: $(BIN_SIMULADOR)
 
 $(BIN_SIMULADOR): $(OBJS_SIMULADOR)
-	$(CC) $(LDFLAGS) $(INFLAG)$^ $(OUTFLAG)$@
+	$(CC) $(INFLAG)$^ $(OUTFLAG)$@ $(LDFLAGS)
 
 clean: clean_ep1simulador
 

@@ -6,6 +6,8 @@
 
 #include <pthread.h>
 
+#include "util.h"
+
 /* Estrutura que armazena linhas do tracefile */
 typedef struct {
 	int finished; /* Verifica se o processo ja terminou */
@@ -16,7 +18,7 @@ typedef struct {
 	char *nome; /* Nome do processo */
 	float dt; /* Tempo real de processamento */
 	float deadline; /* Tempo limite do processo */
-	clock_t init_time;
+	Timer init_time;
 } Trace;
 
 /* Estrutura que armazena do tracefile */

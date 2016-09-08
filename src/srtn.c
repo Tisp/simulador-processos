@@ -9,7 +9,6 @@
 #include "thread.h"
 #include "output.h"
 
-
 int debug;
 
 /* Percorre a lista de trace, verifica qual esta rodando e compara o tempo */
@@ -39,13 +38,17 @@ void srtn(Tracefile *tracefile) {
 
     int i = 0;
     int preemption = 0;
+    float diff;
            
     /* Comeca a simulacao de fcfs */
-    clock_t t1 = clock();
+    Timer start, finish;
+    get_time(&start);
     
     while(1) {
         
-        float diff = diff_time_s(clock(), t1);
+  
+        get_time(&finish);
+        diff = diff_time_s(finish, start);
         i = i % tracefile->length;
 
         if(diff >= tracefile->trace[i]->t0 && tracefile->trace[i]->to_run == 0) {
@@ -54,7 +57,7 @@ void srtn(Tracefile *tracefile) {
             if(find_free_core() != -1) {
 
                 tracefile->trace[i]->to_run = 1;
-                tracefile->trace[i]->init_time = t1;
+                tracefile->trace[i]->init_time = start;
                 if(!tracefile->trace[i]->thread)
                     pthread_create(&tracefile->trace[i]->thread, NULL, worker, tracefile->trace[i]); 
 
@@ -71,7 +74,7 @@ void srtn(Tracefile *tracefile) {
                     preemption++; /* houve preepcao */
                     tracefile->trace[sh]->to_run = 0; /* Para o candidado mais demorado */
                     tracefile->trace[i]->to_run = 1; /* Coloca o novo para rodar */
-                    tracefile->trace[i]->init_time = t1;
+                    tracefile->trace[i]->init_time = start;
                     
                     if(!tracefile->trace[i]->thread)
                         pthread_create(&tracefile->trace[i]->thread, NULL, worker, tracefile->trace[i]);  

@@ -27,13 +27,12 @@ int find_free_core() {
 
 void *worker(void *args) {
 
-    pthread_mutex_lock(&lock);
-
     Trace *trace = args;
     float diff;
     int my_core = 0;
-    clock_t t = clock();
+    Timer start, finish;
 
+    get_time(&start);
 
     /* Espera para ser marcada para rodar */
     LOOP:while(trace->to_run == 0) {
@@ -41,44 +40,56 @@ void *worker(void *args) {
     }
 
     /* Inicio do processamento */
+     pthread_mutex_lock(&lock);
      my_core = find_free_core();
+     pthread_mutex_unlock(&lock);
+
 
      /* Espera liberar cpu */
      if(my_core == -1) goto LOOP;
-
+     
+     pthread_mutex_lock(&lock);
      occupied_cores[my_core] = 1;
-
+     pthread_mutex_unlock(&lock);
+    
     if(debug) 
         fprintf(stderr, "Processo %s usando CPU %d\n", trace->nome, my_core);
     
     while(trace->runtime <= trace->dt) {
 
         if(trace->to_run == 0) {
+            pthread_mutex_lock(&lock);
             occupied_cores[my_core] = 0;
+            pthread_mutex_unlock(&lock);
+
             goto LOOP;
         }
 
        //printf("Processo %s [%lf, %lf] falta: %lf\n", trace->nome, trace->dt, trace->runtime,(trace->dt - trace->runtime));
         is_prime(11587); /* Gasta processamento */
-        diff = diff_time_s(clock(), t);
+        get_time(&finish);
+        diff = diff_time_s(finish, start);
         trace->runtime = diff;
     }
 
-    if(debug)
+     if(debug)
         fprintf(stderr, "Processo %s finalizado, liberando CPU %d\n", trace->nome, my_core);
     
 
   // pthread_mutex_lock(&lock);
-   occupied_cores[my_core] = 0;
+  pthread_mutex_lock(&lock);
+  occupied_cores[my_core] = 0;
+  pthread_mutex_unlock(&lock);
 
-   diff = diff_time_s(clock(), trace->init_time);
-   write_output(trace->nome, diff, (diff - trace->t0));
+  get_time(&finish);
+  diff = diff_time_s(finish, trace->init_time);
+  write_output(trace->nome, diff, (diff - trace->t0));
    
-   trace->finished = 1;
-   pthread_exit(&trace->thread);
+  trace->finished = 1;
+  pthread_exit(&trace->thread);
    
-   pthread_mutex_unlock(&lock);
-   return NULL;
+  return NULL;
+  
 }
 
 
