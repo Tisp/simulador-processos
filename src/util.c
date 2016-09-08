@@ -8,7 +8,6 @@
 /* Retorna o numero de CPUS */
 int n_cores() {
     return sysconf(_SC_NPROCESSORS_ONLN);
-    //return 1;
 }
 
 /* Retonar em segundos a diferenca de dois times */
