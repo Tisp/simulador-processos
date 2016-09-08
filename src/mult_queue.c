@@ -80,11 +80,15 @@ void *worker_mult_queue(void *args) {
   get_time(&finish);
   diff = diff_time_s(finish, trace->init_time);
   write_output(trace->nome, diff, (diff - trace->t0));
-  trace->deadline = trace->t0 + trace->dt;
-  printf("Processo %s => deadline: %lf, gasto => %lf, dif => %lf \n", trace->nome, trace->deadline, diff, (diff-trace->deadline));
+
   trace->finished = 1;
+  float total = (trace->deadline - trace->t0) - trace->runtime;
+  if(total < 0.)
+	printf("Cumpriu\n");
+  
   pthread_exit(&trace->thread);
    
+
   return NULL;
 
 
