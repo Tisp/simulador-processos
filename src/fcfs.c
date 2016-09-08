@@ -10,7 +10,6 @@
 #include "thread.h"
 #include "output.h"
 
-int debug;
 
 /* First-Come First-Served */
 

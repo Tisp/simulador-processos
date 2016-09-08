@@ -18,7 +18,8 @@ typedef struct {
 	char *nome; /* Nome do processo */
 	float dt; /* Tempo real de processamento */
 	float deadline; /* Tempo limite do processo */
-	Timer init_time;
+	Timer init_time; /* Guarda o timer inicial */
+	float quantum;
 } Trace;
 
 /* Estrutura que armazena do tracefile */

@@ -9,7 +9,6 @@
 #include "thread.h"
 #include "output.h"
 
-int debug;
 
 /* Percorre a lista de trace, verifica qual esta rodando e compara o tempo */
 int shortest(Tracefile *tracefile, int id, float runtime) {

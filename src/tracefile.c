@@ -45,6 +45,7 @@ Tracefile *read_tracefile(const char *filename) {
 		tracefile->trace[i]->to_run = 0;
 		tracefile->trace[i]->thread = NULL;
 		tracefile->trace[i]->runtime = 0;
+		tracefile->trace[i]->quantum = 0;
 		
 		i++;
 	}
