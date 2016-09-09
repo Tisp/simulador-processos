@@ -1,15 +1,17 @@
 import subprocess
 
+#loop do escalonador
 for i in range(1, 4):
-	for t in range(1, 4):	
+    #loop do teste	
+	for t in ['poucos', 'medios', 'muitos']:	
 
 		dados = '' 
 		media_deadline = 0.
 		media_contexto = 0.
-	
+		
 		for x in range(0, 30):
 
-			deadline = subprocess.Popen('./simulador '+ str(i) +' tests/test_'+ str(t) +' output  | grep -o Cumpriu | wc -l', shell=True, stdout=subprocess.PIPE).stdout.read()
+			deadline = subprocess.Popen('./simulador '+ str(i) +' tests/'+ (t) +'/arquivoTrace'+ str(x) +'.txt+' output  | grep -o Cumpriu | wc -l', shell=True, stdout=subprocess.PIPE).stdout.read()
 			contexto = subprocess.Popen('tail -n 1 output', shell=True, stdout=subprocess.PIPE).stdout.read()		
 
 			media_deadline += float(deadline.rstrip())
