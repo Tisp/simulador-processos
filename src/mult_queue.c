@@ -115,7 +115,6 @@ void mult_queue(Tracefile *tracefile) {
         diff = diff_time_s(finish, start);
 	    
         i = i % tracefile->length;
-	    //printf("%lf, %lf %d \n", diff, tracefile->trace[i]->t0, (diff >= tracefile->trace[i]->t0));
         
         if(diff >= tracefile->trace[i]->t0 && tracefile->trace[i]->to_run == 0 && find_free_core() >= 0) {
             tracefile->trace[i]->to_run = 1;

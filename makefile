@@ -4,7 +4,7 @@ SRCS_SIMULADOR = $(wildcard src/*.c) $(wildcard src/*.c)
 INCS = -Isrc/
 LIBS = -lrt -lpthread -pthread
 
-CFLAGS = $(INCS) -c -g -Wall -pedantic
+CFLAGS = $(INCS) -c -g
 LDFLAGS = $(LIBS)
 OUTFLAG = -o
 INFLAG =
